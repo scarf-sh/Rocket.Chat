@@ -273,7 +273,7 @@ export const statistics = {
 
 		statistics.pushQueue = Promise.await(NotificationQueue.col.estimatedDocumentCount());
 
-		statistics.enterprise = getEnterpriseStatistics();
+		statistics.enterprise = Promise.await(getEnterpriseStatistics());
 
 		console.log(statistics);
 
