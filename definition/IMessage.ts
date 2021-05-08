@@ -8,6 +8,21 @@ export interface IMessage extends IRocketChatRecord {
 	rid: RoomID;
 	msg: string;
 	ts: Date;
+
+	// TODO
+	blocks?: any;
+	private?: boolean;
+	edited?: any;
+	sentByEmail?: boolean;
+	attachments?: any;
+	avatar?: string;
+	emoji?: string;
+	file?: any;
+
+	mid?: string;
+
+	bot?: string;
+
 	mentions?: {
 		_id: string;
 		type: MentionType;
@@ -29,6 +44,7 @@ export interface IMessage extends IRocketChatRecord {
 	drid?: RoomID;
 	tlm?: Date;
 
+	dlm?: Date;
 	dcount?: number;
 	tcount?: number;
 	t?: string;

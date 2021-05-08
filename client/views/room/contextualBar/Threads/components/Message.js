@@ -1,11 +1,10 @@
-import { Box, Button, Icon } from '@rocket.chat/fuselage';
-import React, { memo } from 'react';
+import { Button, Icon, Message } from '@rocket.chat/fuselage';
+import React from 'react';
 
 import * as NotificationStatus from '../../../../../components/Message/NotificationStatus';
 import { followStyle, anchor } from '../../../../../components/Message/helpers/followSyle';
 import RawText from '../../../../../components/RawText';
 import UserAvatar from '../../../../../components/avatar/UserAvatar';
-import * as MessageTemplate from '../../../components/MessageTemplate';
 
 function isIterable(obj) {
 	// checks for null and undefined
@@ -15,7 +14,7 @@ function isIterable(obj) {
 	return typeof obj[Symbol.iterator] === 'function';
 }
 
-export default memo(function Message({
+export default React.memo(function MessageThread({
 	_id,
 	msg,
 	following,
@@ -36,65 +35,43 @@ export default memo(function Message({
 }) {
 	const button = !following ? 'bell-off' : 'bell';
 	const actionLabel = t(!following ? 'Not_Following' : 'Following');
-
 	return (
-		<MessageTemplate.Message
+		<Message
 			{...props}
 			className={[
 				...(isIterable(className) ? className : [className]),
 				!following && followStyle,
 			].filter(Boolean)}
 		>
-			<MessageTemplate.Container mb='neg-x2'>
+			<Message.LeftContainer>
 				<UserAvatar username={username} className='rcx-message__avatar' size='x36' />
-			</MessageTemplate.Container>
-			<MessageTemplate.Container width='1px' mb='neg-x4' flexGrow={1}>
-				<MessageTemplate.Header>
-					<MessageTemplate.Username title={username}>{name}</MessageTemplate.Username>
-					<MessageTemplate.Timestamp ts={formatDate(ts)} />
-				</MessageTemplate.Header>
-				<MessageTemplate.BodyClamp>
+			</Message.LeftContainer>
+			<Message.Container>
+				<Message.Header>
+					<Message.Name title={username}>{name}</Message.Name>
+					<Message.Timestamp>{formatDate(ts)}</Message.Timestamp>
+				</Message.Header>
+				<Message.Body clamp={2}>
 					<RawText>{msg}</RawText>
-				</MessageTemplate.BodyClamp>
-				<Box mi='neg-x2' flexDirection='row' display='flex' alignItems='baseline' mbs='x8'>
-					<Box
-						display='flex'
-						alignItems='center'
-						is='span'
-						fontSize='x12'
-						color='neutral-700'
-						fontWeight='600'
-					>
-						<Icon name='thread' size='x20' mi='x2' />
-						{replies}
-					</Box>
-					<Box
-						display='flex'
-						alignItems='center'
-						is='span'
-						fontSize='x12'
-						color='neutral-700'
-						fontWeight='600'
-					>
-						<Icon name='user' size='x20' mi='x2' />
-						{participants}
-					</Box>
-					<Box
-						display='flex'
-						alignItems='center'
-						is='span'
-						fontSize='x12'
-						color='neutral-700'
-						fontWeight='600'
-						withTruncatedText
-						flexShrink={1}
-						mi='x2'
-					>
-						<Icon name='clock' size='x20' mi='x2' /> {formatDate(tlm)}{' '}
-					</Box>
-				</Box>
-			</MessageTemplate.Container>
-			<MessageTemplate.Container alignItems='center'>
+				</Message.Body>
+				<Message.Block>
+					<Message.Metrics>
+						<Message.Metrics.Item>
+							<Message.Metrics.Item.Icon name='thread' />
+							<Message.Metrics.Item.Label>{replies}</Message.Metrics.Item.Label>
+						</Message.Metrics.Item>
+						<Message.Metrics.Item>
+							<Message.Metrics.Item.Icon name='user' />
+							<Message.Metrics.Item.Label>{participants}</Message.Metrics.Item.Label>
+						</Message.Metrics.Item>
+						<Message.Metrics.Item>
+							<Message.Metrics.Item.Icon name='clock' />
+							<Message.Metrics.Item.Label>{formatDate(tlm)}</Message.Metrics.Item.Label>
+						</Message.Metrics.Item>
+					</Message.Metrics>
+				</Message.Block>
+			</Message.Container>
+			<Message.ContainerFixed>
 				<Button
 					className={anchor}
 					small
@@ -112,7 +89,7 @@ export default memo(function Message({
 				{(mention && <NotificationStatus.Me t={t} mb='x24' />) ||
 					(all && <NotificationStatus.All t={t} mb='x24' />) ||
 					(unread && <NotificationStatus.Unread t={t} mb='x24' />)}
-			</MessageTemplate.Container>
-		</MessageTemplate.Message>
+			</Message.ContainerFixed>
+		</Message>
 	);
 });
