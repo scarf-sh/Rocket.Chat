@@ -32,6 +32,9 @@ const Room: FC<{}> = () => {
 	const isLayoutEmbedded = useEmbeddedLayout();
 
 	const hideFlexTab = useUserPreference('hideFlexTab');
+
+	const earlyAdopter = useUserPreference('enableMessageParserEarlyAdoption');
+
 	const isOpen = useMutableCallback(() => !!(tab && tab.template));
 
 	const tabBar = useMemo(() => ({ open, close, isOpen, openUserInfo }), [
@@ -41,6 +44,7 @@ const Room: FC<{}> = () => {
 		openUserInfo,
 	]);
 
+	console.log(earlyAdopter);
 	return (
 		<RoomTemplate aria-label={t('Channel')} data-qa-rc-room={room._id}>
 			<RoomTemplate.Header>
@@ -50,7 +54,7 @@ const Room: FC<{}> = () => {
 				{!isLayoutEmbedded && room.announcement && (
 					<Announcement announcement={room.announcement} />
 				)}
-				<MessageList />
+				{earlyAdopter && <MessageList />}
 				<BlazeTemplate
 					onClick={hideFlexTab ? close : undefined}
 					name='roomOld'
